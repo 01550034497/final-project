@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}الرئيسية{% endblock %}
+
+{% block content %}
+<div class="hero-section fade-in-up">
+    <div class="container text-center">
+        <h1 class="hero-title">
+            <i class="fas fa-rocket"></i> ابدأ رحلتك
+        </h1>
+        <p class="hero-subtitle">
+            منصة التمويل الجماعي الأولى
+        </p>
+        <p class="mb-4">
+            ادعم المشاريع اللي بتحبها أو أنشئ مشروعك وجمع التمويل
+        </p>
+        <a href="{% url 'projects:create_project' %}" class="btn btn-light btn-lg me-2">
+            <i class="fas fa-plus-circle"></i> ابدأ مشروعك
+        </a>
+        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-light btn-lg">
+            <i class="fas fa-search"></i> تصفح المشاريع
+        </a>
+    </div>
+</div>
+
+<!-- Categories -->
+<div class="container mb-5">
+    <h3 class="mb-4 text-center">
+        <i class="fas fa-th-large"></i> التصنيفات
+    </h3>
+    <div class="text-center">
+        {% for category in categories %}
+            <a href="{% url 'projects:project_list' %}?category={{ category.id }}" class="category-badge">
+                {{ category.name }}
+            </a>
+        {% empty %}
+            <p>مفيش تصنيفات</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Top Rated Projects Slider -->
+{% if top_rated_projects %}
+<div class="container mb-5">
+    <h3 class="mb-4">
+        <i class="fas fa-star text-warning"></i> أعلى المشاريع تقييماً
+    </h3>
+    <div id="topRatedCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for project in top_rated_projects %}
+                {% if forloop.counter0|divisibleby:3 %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <div class="row">
+                {% endif %}
+                
+                <div class="col-md-4 mb-3">
+                    <div class="card project-card h-100">
+                        {% if project.images.first %}
+                            <img src="{{ project.images.first.image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary text-white d-flex justify-content-center align-items-center" style="height: 200px;">
+                                <i class="fas fa-image fa-3x"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="text-warning">
+                                <i class="fas fa-star"></i> {{ project.avg_rating|default:"0" }} / 5
+                            </p>
+                            <a href="{% url 'projects:project_detail' project.id %}" class="btn btn-primary w-100">
+                                التفاصيل <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if forloop.counter|divisibleby:3 or forloop.last %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if top_rated_projects|length > 3 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#topRatedCarousel" data-bs-slide="prev" style="width: 5%; filter: invert(1);">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#topRatedCarousel" data-bs-slide="next" style="width: 5%; filter: invert(1);">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Featured Projects -->
+{% if featured_projects %}
+<div class="container mb-5">
+    <h3 class="mb-4">
+        <i class="fas fa-crown text-warning"></i> المشاريع المميزة
+    </h3>
+    <div class="row">
+        {% for project in featured_projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card project-card h-100">
+                    {% if project.images.first %}
+                        <img src="{{ project.images.first.image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex justify-content-center align-items-center" style="height: 200px;">
+                            <i class="fas fa-image fa-3x"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <span class="badge bg-warning">
+                                <i class="fas fa-star"></i> مميز
+                            </span>
+                        </div>
+                        <p class="card-text text-muted">{{ project.details|truncatechars:80 }}</p>
+                        <a href="{% url 'projects:project_detail' project.id %}" class="btn btn-primary w-100">
+                            التفاصيل <i class="fas fa-arrow-left"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Latest Projects -->
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>
+            <i class="fas fa-fire"></i> أحدث المشاريع
+        </h3>
+        <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary">
+            عرض الكل <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+    
+    <div class="row">
+        {% for project in projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card project-card h-100">
+                    {% if project.images.first %}
+                        <img src="{{ project.images.first.image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex justify-content-center align-items-center" style="height: 200px;">
+                            <i class="fas fa-image fa-3x"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            {% if project.is_featured %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-star"></i> مميز
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <p class="card-text text-muted">{{ project.details|truncatechars:100 }}</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-user"></i> {{ project.user.username }}
+                            </small>
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> {{ project.end_time|timeuntil }}
+                            </small>
+                        </div>
+                        
+                        <a href="{% url 'projects:project_detail' project.id %}" class="btn btn-primary w-100 mt-3">
+                            التفاصيل <i class="fas fa-arrow-left"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="empty-state text-center py-5">
+                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                    <h4>مفيش مشاريع حالياً</h4>
+                    <p class="text-muted">كون أول من ينشئ مشروع!</p>
+                    <a href="{% url 'projects:create_project' %}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> إنشاء مشروع
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

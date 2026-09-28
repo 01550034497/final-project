@@ -1,0 +1,16 @@
+{% autoescape off %}
+أهلاً {{ user.first_name }},
+
+شكراً لتسجيلك في منصة Crowdfunding!
+
+لتفعيل حسابك، يرجى الضغط على الرابط التالي:
+
+http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+
+⏰ ملاحظة: هذا الرابط صالح لمدة 24 ساعة فقط.
+
+إذا لم تقم بالتسجيل، يرجى تجاهل هذا الإيميل.
+
+مع تحياتنا،
+فريق Crowdfunding
+{% endautoescape %}

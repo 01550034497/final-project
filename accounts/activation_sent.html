@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}تم إرسال رابط التفعيل{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg text-center">
+                <div class="card-body p-5">
+                    <i class="fas fa-envelope-open-text fa-5x text-primary mb-4"></i>
+                    <h3 class="mb-3">تم إرسال رابط التفعيل</h3>
+                    <p class="text-muted">
+                        لقد أرسلنا رابط تفعيل إلى بريدك الإلكتروني.
+                        يرجى التحقق من بريدك (وصندوق الرسائل غير المرغوب فيها) والضغط على الرابط لتفعيل حسابك.
+                    </p>
+                    <p class="text-danger">
+                        <i class="fas fa-clock"></i>
+                        الرابط صالح لمدة 24 ساعة فقط.
+                    </p>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-sign-in-alt"></i> الذهاب لتسجيل الدخول
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
